@@ -1,13 +1,8 @@
 import 'dart:async';
-import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:audioplayer/audioplayer.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
-import 'package:path_provider/path_provider.dart';
 
-typedef void OnError(Exception exception);
 
 const kUrl =
     "https://tntradio.hostingradio.ru:8027/hhr128.mp3?radiostatistica=developer";
@@ -59,16 +54,10 @@ class _AudioAppState extends State<AudioApp> {
 
   Future play() async {
     await audioPlayer.play(kUrl);
-    setState(() {
-      playerState = AudioPlayerState.BUFFERING;
-    });
   }
 
   Future stop() async {
     await audioPlayer.stop();
-    setState(() {
-      playerState = AudioPlayerState.STOPPED;
-    });
   }
 
   Future mute(bool muted) async {
@@ -102,7 +91,7 @@ class _AudioAppState extends State<AudioApp> {
               icon: new Icon(Icons.play_arrow),
               color: Colors.cyan),
           new IconButton(
-              onPressed: isPlaying || isStopped ? () => stop() : null,
+              onPressed: isPlaying ? () => stop() : null,
               iconSize: 64.0,
               icon: new Icon(Icons.stop),
               color: Colors.cyan),
@@ -128,7 +117,7 @@ class _AudioAppState extends State<AudioApp> {
       ]));
 
   List<Widget> _buildStatusInfo() {
-    List<Widget>  list = [Text(playerState.toString())];
+    List<Widget> list = [Text(playerState.toString())];
     if (AudioPlayerState.BUFFERING == playerState) {
       list.add(CircularProgressIndicator());
     }

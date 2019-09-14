@@ -37,7 +37,7 @@ class AudioPlayer {
   Future<void> _audioPlayerStateChange(MethodCall call) async {
     switch (call.method) {
       case "audio.onBuffering":
-        assert(_state == AudioPlayerState.BUFFERING);
+        _state = AudioPlayerState.BUFFERING;
         _playerStateController.add(AudioPlayerState.BUFFERING);
         break;
       case "audio.onPlay":

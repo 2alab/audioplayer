@@ -14,7 +14,10 @@ import com.google.android.exoplayer2.ext.okhttp.OkHttpDataSourceFactory;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.upstream.DataSpec;
+import com.google.android.exoplayer2.upstream.HttpDataSource;
 
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import io.flutter.Log;
@@ -118,12 +121,30 @@ public class AudioplayerPlugin implements MethodCallHandler {
         public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
             if (playWhenReady && playbackState == Player.STATE_READY) {
                 channel.invokeMethod("audio.onPlay", null);
-            } else if (playWhenReady) {
-                // Not playing because playback ended, the player is buffering, stopped or
-                // failed. Check playbackState and player.getPlaybackError for details.
+            } else if (playWhenReady && playbackState == Player.STATE_BUFFERING) {
+                channel.invokeMethod("audio.onBuffering", null);
             } else if (Player.STATE_ENDED == playbackState) {
                 channel.invokeMethod("audio.onEnded", null);
                 Log.v("RadioPlayer", "audio.onEnded ");
+            }
+        }
+
+        @Override
+        public void onPlayerError(ExoPlaybackException error) {
+            if (error.type == ExoPlaybackException.TYPE_SOURCE) {
+                IOException cause = error.getSourceException();
+                if (cause instanceof HttpDataSource.HttpDataSourceException) {
+                    HttpDataSource.HttpDataSourceException httpError = (HttpDataSource.HttpDataSourceException) cause;
+                    // This is the request for which the error occurred.
+                    DataSpec requestDataSpec = httpError.dataSpec;
+                    channel.invokeMethod("audio.onEnded", null);
+                    Log.v("RadioPlayer", "audio.onEnded");
+
+                    mediaPlayer.stop();
+                    mediaPlayer.release();
+                    mediaPlayer = null;
+
+                }
             }
         }
 
