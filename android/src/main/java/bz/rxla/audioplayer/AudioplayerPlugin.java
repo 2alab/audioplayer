@@ -96,7 +96,6 @@ public class AudioplayerPlugin implements MethodCallHandler {
 
 
     private void play(String url) {
-        channel.invokeMethod("audio.onBuffering", null);
         if (mediaPlayer == null) {
             mediaPlayer = ExoPlayerFactory.newSimpleInstance(context);
             OkHttpClient callFactory = new OkHttpClient.Builder()
