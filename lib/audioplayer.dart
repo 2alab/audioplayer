@@ -40,6 +40,10 @@ class AudioPlayer {
   Future<void> _audioPlayerStateChange(MethodCall call) async {
     switch (call.method) {
       case "audio.onBuffering":
+        if (AudioPlayerState.BUFFERING ==_state){
+          log.info("skip player state $_state");
+          break;
+        }
         _state = AudioPlayerState.BUFFERING;
         _playerStateController.add(AudioPlayerState.BUFFERING);
         break;
