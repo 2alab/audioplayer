@@ -2,12 +2,19 @@ import 'dart:async';
 
 import 'package:audioplayer/audioplayer.dart';
 import 'package:flutter/material.dart';
+import 'package:logging/logging.dart';
 
 
 const kUrl =
     "https://tntradio.hostingradio.ru:8027/hhr128.mp3?radiostatistica=developer";
 
 void main() {
+  Logger.root.level = Level.ALL;
+  Logger.root.onRecord.listen((LogRecord rec) {
+    print('${rec.level.name}: ${rec.time}: ${rec.message}');
+  });
+
+
   runApp(new MaterialApp(home: new Scaffold(body: new AudioApp())));
 }
 

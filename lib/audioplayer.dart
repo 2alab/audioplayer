@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/services.dart';
+import 'package:logging/logging.dart';
 
 enum AudioPlayerState {
   END,
@@ -8,6 +9,8 @@ enum AudioPlayerState {
   PLAYING,
   BUFFERING,
 }
+
+final Logger log = new Logger('AudioPlayer');
 
 const MethodChannel _channel = const MethodChannel('ru.aalab/radioplayer');
 
@@ -55,5 +58,6 @@ class AudioPlayer {
       default:
         throw new ArgumentError('Unknown method ${call.method} ');
     }
+    log.info("change player state $_state");
   }
 }
