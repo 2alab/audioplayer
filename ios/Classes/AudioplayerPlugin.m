@@ -40,7 +40,7 @@ static NSString *const CHANNEL_NAME = @"ru.aalab/radioplayer";
         
         [_playerWrapper play:call.arguments[@"url"]];
         
-        result(nil);
+        result(@YES);
     }
     else if ([call.method isEqualToString:@"stop"]) {
         [_playerWrapper pause];
@@ -48,7 +48,7 @@ static NSString *const CHANNEL_NAME = @"ru.aalab/radioplayer";
         _playerWrapper.delegate = nil;
         _playerWrapper = nil;
         
-        result(nil);
+        result(@YES);
     }
     else if ([call.method isEqualToString:@"mute"]) {
         
@@ -59,7 +59,7 @@ static NSString *const CHANNEL_NAME = @"ru.aalab/radioplayer";
             [_playerWrapper setVolume:1.0];
         }
         
-        result(nil);
+        result(@YES);
     }
 
 }
