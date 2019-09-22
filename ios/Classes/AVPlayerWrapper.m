@@ -10,7 +10,7 @@
 #import "AVPlayerItem+Additions.h"
 #import <AVFoundation/AVFoundation.h>
 
-#define PLAYER_DEBUG
+//#define PLAYER_DEBUG
 
 #ifdef PLAYER_DEBUG
 #   define PLog(fmt, ...) NSLog(@"[PLAYER] " fmt, ##__VA_ARGS__);

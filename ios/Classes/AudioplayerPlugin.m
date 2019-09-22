@@ -30,7 +30,7 @@ static NSString *const CHANNEL_NAME = @"ru.aalab/radioplayer";
 }
 
 - (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
-    
+
     if ([call.method isEqualToString:@"play"]) {
         
         if (_playerWrapper == nil) {
@@ -69,22 +69,27 @@ static NSString *const CHANNEL_NAME = @"ru.aalab/radioplayer";
     switch (newState) {
         case RDPlayerStateLoading:
             [_channel invokeMethod:@"audio.onBuffering" arguments:nil];
+            [NSNotificationCenter.defaultCenter postNotificationName:@"audio.onBuffering" object:nil];
             break;
 
         case RDPlayerStatePlaying:
             [_channel invokeMethod:@"audio.onPlay" arguments:nil];
+            [NSNotificationCenter.defaultCenter postNotificationName:@"audio.onPlay" object:nil];
             break;
 
         case RDPlayerStatePaused:
             [_channel invokeMethod:@"audio.onStop" arguments:nil];
+            [NSNotificationCenter.defaultCenter postNotificationName:@"audio.onStop" object:nil];
             break;
 
         case RDPlayerStateError:
             [_channel invokeMethod:@"audio.onError" arguments:nil];
+            [NSNotificationCenter.defaultCenter postNotificationName:@"audio.onError" object:nil];
             break;
 
         case RDPlayerStateEnded:
             [_channel invokeMethod:@"audio.onEnded" arguments:nil];
+            [NSNotificationCenter.defaultCenter postNotificationName:@"audio.onEnded" object:nil];
             break;
     }
 }
