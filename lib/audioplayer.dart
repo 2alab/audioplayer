@@ -18,7 +18,12 @@ class AudioPlayer {
   final StreamController<AudioPlayerState> _playerStateController =
       new StreamController.broadcast();
 
+  final StreamController<String> _metadataController =
+      new StreamController.broadcast();
+
   AudioPlayerState _state = AudioPlayerState.STOPPED;
+
+  String _metadata = "";
 
   AudioPlayer() {
     _channel.setMethodCallHandler(_audioPlayerStateChange);
@@ -35,12 +40,15 @@ class AudioPlayer {
   Stream<AudioPlayerState> get onPlayerStateChanged =>
       _playerStateController.stream;
 
+  Stream<String> get onMetadataChanged => _metadataController.stream;
+
   AudioPlayerState get state => _state;
+  String get metadata => _metadata;
 
   Future<void> _audioPlayerStateChange(MethodCall call) async {
     switch (call.method) {
       case "audio.onBuffering":
-        if (AudioPlayerState.BUFFERING ==_state){
+        if (AudioPlayerState.BUFFERING == _state) {
           log.info("skip player state $_state");
           break;
         }
@@ -58,6 +66,10 @@ class AudioPlayer {
       case "audio.onEnded":
         _state = AudioPlayerState.END;
         _playerStateController.add(AudioPlayerState.END);
+        break;
+      case "audio.onMetadata":
+        _metadata = call.arguments;
+        _metadataController.add(_metadata);
         break;
       default:
         throw new ArgumentError('Unknown method ${call.method} ');

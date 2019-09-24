@@ -12,6 +12,9 @@ import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.ext.okhttp.OkHttpDataSourceFactory;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
+import com.google.android.exoplayer2.metadata.Metadata;
+import com.google.android.exoplayer2.metadata.MetadataOutput;
+import com.google.android.exoplayer2.metadata.icy.IcyInfo;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.upstream.DataSpec;
@@ -98,15 +101,27 @@ public class AudioplayerPlugin implements MethodCallHandler {
     private void play(String url) {
         if (mediaPlayer == null) {
             mediaPlayer = ExoPlayerFactory.newSimpleInstance(context);
-            OkHttpClient callFactory = new OkHttpClient.Builder()
-                    .connectTimeout(HTTP_CONNECT_TIMEOUT_SECONDS,TimeUnit.SECONDS)
-                    .readTimeout(HTTP_READ_TIMEOUT_SECONDS,TimeUnit.SECONDS)
-                    .build();
+            OkHttpClient callFactory = new OkHttpClient.Builder().connectTimeout(HTTP_CONNECT_TIMEOUT_SECONDS, TimeUnit.SECONDS).readTimeout(HTTP_READ_TIMEOUT_SECONDS, TimeUnit.SECONDS).build();
 
             MediaSource source = new ExtractorMediaSource(Uri.parse(url), new OkHttpDataSourceFactory(callFactory, "ExoPlayer"), new DefaultExtractorsFactory(), null, null);
             mediaPlayer.prepare(source);
             mediaPlayer.setPlayWhenReady(true);
+            mediaPlayer.addMetadataOutput(new MetadataOutput() {
+                @Override
+                public void onMetadata(Metadata metadata) {
+                    if (metadata.length() > 0 && metadata.get(0) instanceof IcyInfo) {
+                        IcyInfo icyInfo = (IcyInfo) metadata.get(0);
+                        String title = icyInfo.title;
+                        if (null != title && !title.isEmpty()) {
+                            channel.invokeMethod("audio.onMetadata", title);
+                            Log.i("RadioPlayer", "stream metadata: " + icyInfo);
+                        } else {
+                            Log.i("RadioPlayer", "stream metadata empty " + icyInfo);
+                        }
+                    }
 
+                }
+            });
             mediaPlayer.addListener(new PlayerEventListener());
         } else {
             mediaPlayer.setPlayWhenReady(true);

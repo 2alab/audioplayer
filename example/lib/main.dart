@@ -4,7 +4,6 @@ import 'package:audioplayer/audioplayer.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 
-
 const kUrl =
     "https://tntradio.hostingradio.ru:8027/hhr128.mp3?radiostatistica=developer";
 
@@ -13,7 +12,6 @@ void main() {
   Logger.root.onRecord.listen((LogRecord rec) {
     print('${rec.level.name}: ${rec.time}: ${rec.message}');
   });
-
 
   runApp(new MaterialApp(home: new Scaffold(body: new AudioApp())));
 }
@@ -27,6 +25,7 @@ class _AudioAppState extends State<AudioApp> {
   AudioPlayer audioPlayer;
 
   AudioPlayerState playerState = AudioPlayerState.STOPPED;
+  String metadata = "";
 
   get isPlaying => playerState == AudioPlayerState.PLAYING;
 
@@ -35,6 +34,8 @@ class _AudioAppState extends State<AudioApp> {
   bool isMuted = false;
 
   StreamSubscription _audioPlayerStateSubscription;
+
+  StreamSubscription _audioPlayerMetadataSubscription;
 
   @override
   void initState() {
@@ -45,6 +46,7 @@ class _AudioAppState extends State<AudioApp> {
   @override
   void dispose() {
     _audioPlayerStateSubscription.cancel();
+    _audioPlayerMetadataSubscription.cancel();
     audioPlayer.stop();
     super.dispose();
   }
@@ -55,6 +57,13 @@ class _AudioAppState extends State<AudioApp> {
         audioPlayer.onPlayerStateChanged.listen((s) {
       setState(() {
         playerState = s;
+      });
+    });
+
+    _audioPlayerMetadataSubscription =
+        audioPlayer.onMetadataChanged.listen((m) {
+      setState(() {
+        metadata = m;
       });
     });
   }
@@ -128,6 +137,7 @@ class _AudioAppState extends State<AudioApp> {
     if (AudioPlayerState.BUFFERING == playerState) {
       list.add(CircularProgressIndicator());
     }
+    list.add(Text(metadata));
     return list;
   }
 }
