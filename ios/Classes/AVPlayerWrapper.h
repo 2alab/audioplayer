@@ -31,5 +31,6 @@ typedef enum : NSUInteger {
 @protocol AVPlayerWrapperDelegate <NSObject>
 
 - (void)playerWrapper:(AVPlayerWrapper*)wrapper didChangeState:(RDPlayerState)newState;
+- (void)playerWrapper:(AVPlayerWrapper*)wrapper didLoadTimedMetadataTitle:(NSString*)title;
 
 @end

@@ -14,5 +14,6 @@
 @property (nonatomic, readonly) NSTimeInterval  loadedTimeDuration;
 @property (nonatomic, readonly) NSTimeInterval  durationInSeconds;
 @property (nonatomic, readonly) NSDictionary    *timedMetadataDictionary;
+@property (nonatomic, readonly) NSString        *timedMetadataTitle;
 
 @end

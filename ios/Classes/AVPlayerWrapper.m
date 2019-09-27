@@ -272,8 +272,8 @@
         {
             PLog(@"timedMetadata -> %@ - %@", playerItem.timedMetadataDictionary[@"artist"], playerItem.timedMetadataDictionary[@"title"]);
             
-//            if ([self.delegate respondsToSelector:@selector(player:didLoadTimedMetadata:)])
-//                [self.delegate player:self didLoadTimedMetadata:playerItem.timedMetadataDictionary];
+            if ([self.delegate respondsToSelector:@selector(playerWrapper:didLoadTimedMetadataTitle:)])
+                [self.delegate playerWrapper:self didLoadTimedMetadataTitle:playerItem.timedMetadataTitle];
         }
         else if ([keyPath isEqualToString:@"playbackLikelyToKeepUp"])
         {

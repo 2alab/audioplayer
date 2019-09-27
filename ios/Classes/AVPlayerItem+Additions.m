@@ -43,6 +43,22 @@
     return CMTimeGetSeconds(self.duration);
 }
 
+- (NSString *)timedMetadataTitle
+{
+    for (AVMetadataItem *metadataItem in self.timedMetadata)
+    {
+        NSString *stringValue = metadataItem.stringValue;
+        
+        if([metadataItem.keySpace isEqualToString:AVMetadataKeySpaceCommon])
+        {
+            if([metadataItem.key isEqual:AVMetadataCommonKeyTitle])
+                return stringValue;
+        }
+    }
+    
+    return nil;
+}
+
 - (NSDictionary *)timedMetadataDictionary
 {    
     NSString *artist    = nil;
