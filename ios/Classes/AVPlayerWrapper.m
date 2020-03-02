@@ -23,6 +23,7 @@
     UIBackgroundTaskIdentifier _bgTaskId;
     RDPlayerState _state;
     AVPlayer  *_avPlayer;
+    NSString *_link;
 }
 
 @end
@@ -57,10 +58,23 @@
 
 - (void)play:(NSString*)link
 {
-    if (self.state == RDPlayerStatePlaying || self.state == RDPlayerStatePlaying) {
+    if ([link isEqualToString:_link]
+        && (self.state == RDPlayerStatePlaying || self.state == RDPlayerStateLoading))
+    {
         return;
     }
     
+    if (_avPlayer != nil) {
+        [self _removeObservers];
+
+        // pause player
+        [_avPlayer pause];
+        _avPlayer = nil;
+    }
+    
+    _link = link;
+
+
     // create new player
     _avPlayer = [[AVPlayer alloc] initWithURL:[NSURL URLWithString:link]];
     
