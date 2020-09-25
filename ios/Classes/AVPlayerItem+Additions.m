@@ -49,9 +49,9 @@
     {
         NSString *stringValue = metadataItem.stringValue;
         
-        if([metadataItem.keySpace isEqualToString:AVMetadataKeySpaceCommon])
+        if([metadataItem.identifier isEqualToString:AVMetadataIdentifierIcyMetadataStreamTitle])
         {
-            if([metadataItem.key isEqual:AVMetadataCommonKeyTitle])
+            if([metadataItem.key isEqual:AVMetadataIcyMetadataKeyStreamTitle])
                 return stringValue;
         }
     }
@@ -60,7 +60,7 @@
 }
 
 - (NSDictionary *)timedMetadataDictionary
-{    
+{
     NSString *artist    = nil;
     NSString *songName  = nil;
     NSString *title     = nil;
@@ -80,7 +80,7 @@
         }
         
         // get metadata values
-        if([metadataItem.keySpace isEqualToString:AVMetadataKeySpaceCommon])
+        if([metadataItem.keySpace isEqualToString:AVMetadataIdentifierIcyMetadataStreamTitle])
         {
             if([metadataItem.key isEqual:AVMetadataCommonKeyTitle])
                 title = stringValue;
