@@ -49,11 +49,8 @@
     {
         NSString *stringValue = metadataItem.stringValue;
         
-        if([metadataItem.identifier isEqualToString:AVMetadataIdentifierIcyMetadataStreamTitle])
-        {
-            if([metadataItem.key isEqual:AVMetadataIcyMetadataKeyStreamTitle])
-                return stringValue;
-        }
+        if([metadataItem.key isEqual:AVMetadataIcyMetadataKeyStreamTitle] || [metadataItem.key isEqual:AVMetadataCommonKeyTitle])
+            return stringValue;
     }
     
     return nil;
